@@ -8,7 +8,7 @@ import { Formik } from "formik";
 
 const initialChat: { id: number; user: string; bot: string }[] = [];
 
-const reducer = (state: any, action: any) => {
+/* const reducer = (state: any, action: any) => {
   switch (action.type) {
     case "USER":
       return [...state, { id: state.length + 1, user: action.text, bot: "" }];
@@ -23,6 +23,26 @@ const reducer = (state: any, action: any) => {
     default:
       return state;
   }
+}; */
+
+const reducer = (state: any, action: any) => {
+  const actionMap = {
+    User: () => [
+      ...state,
+      { id: state.length + 1, user: action.text, bot: "" },
+    ],
+    Bot: () => {
+      return state.map((todo: { id: number; user: string; bot: string }) => {
+        if (todo.id === state.length) {
+          return { ...todo, bot: action.text };
+        } else {
+          return todo;
+        }
+      });
+    },
+  };
+  //@ts-ignore
+  return actionMap[action.type]() ?? state;
 };
 
 function App() {
@@ -42,12 +62,12 @@ function App() {
 
   function handleFetch(text: string) {
     setIsLoading(true);
-    dispatch({ type: "USER", text: text });
+    dispatch({ type: "User", text: text });
 
     fetch(`http://127.0.0.1:5000/bot/${text}`)
       .then((response) => response.text())
       .then((text) => {
-        dispatch({ type: "BOT", text: text });
+        dispatch({ type: "Bot", text: text });
         setIsLoading(false);
       })
       .catch((error) => console.log(error));
