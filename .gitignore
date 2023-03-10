@@ -8,12 +8,13 @@
 ./frontend/lerna-debug.log*
 
 ./frontend/node_modules
-./backend/virt/
+./backend/virt/*
 ./frontend/dist
 ./frontend/dist-ssr
 ./frontend/*.local
 
 # Editor directories and files
+./frontend/.fleet/*
 ./frontend/.vscode/*
 ./backend/.vscode/*
 !.vscode/extensions.json
